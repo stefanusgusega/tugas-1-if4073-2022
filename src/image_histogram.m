@@ -1,8 +1,8 @@
-function arr = image_histogram(img_file_path)
+function arr = image_histogram(img_arr)
 %IMHIST Return an array of the distribution of an image that specified on img_file_path
 %   And show the histogram of the distribution using bar plot
+%   imread should be performed on GUI to be passed onto this function
 
-img_arr = imread(img_file_path);
 [height, width] = size(img_arr);
 arr = zeros(256, 1);
 
