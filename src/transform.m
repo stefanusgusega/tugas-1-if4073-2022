@@ -3,7 +3,7 @@ function [transformed_arr] = transform(histogram, total_pixel)
     % Goal: create T(rk)
 
     % create T(rk) 
-    transformed_arr = zeros(256,1);
+    transformed_arr = zeros(256,1,'uint8');
 
     % calculate probability for each rk
     for i = 1:256 

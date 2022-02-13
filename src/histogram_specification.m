@@ -11,7 +11,7 @@ function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_a
     source_img_transformed_arr = transform(source_img_hist, numel(source_img_arr));
     spec_img_transformed_arr = transform(spec_img_hist, numel(spec_img_arr));
 
-    final_transform = zeros(256,1);
+    final_transform = zeros(256, 1, 'uint8');
 
     % Based on source image transformation array, invert the transformation
     % Get distinct values of source image transformation array
