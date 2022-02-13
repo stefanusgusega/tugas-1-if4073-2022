@@ -13,11 +13,6 @@ function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_a
 
     final_transform = zeros(256, 1, 'uint8');
 
-    % Based on source image transformation array, invert the transformation
-    % Get distinct values of source image transformation array
-    % distinct_vals_src = unique(source_img_transformed_arr);
-    % distinct_vals_spec = unique(spec_img_transformed_arr);
-
     % Get the mapping
     for i = 1:256
         [val, idx] = min(abs(spec_img_transformed_arr - source_img_transformed_arr(i)));
