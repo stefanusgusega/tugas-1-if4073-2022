@@ -4,7 +4,7 @@ function arr = image_histogram(img_arr)
     %   imread should be performed on GUI to be passed onto this function
 
     [height, width] = size(img_arr);
-    arr = zeros(256, 1, 'uint8');
+    arr = zeros(256, 1);
 
     for i = 1:height
         for j = 1:width
