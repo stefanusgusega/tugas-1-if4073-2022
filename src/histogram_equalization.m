@@ -17,21 +17,12 @@ function [imgOut] = histogram_equalization(fileName)
     % for each color
     for d = 1:depth
         imgArr = imgIn(:,:,d);
-        hist = image_histogram(imgArr);
+        histogram = image_histogram(imgArr);
         %disp(hist)
         %disp(hist(200));
 
         % create T(rk) 
-        histFunc = zeros(256,1);
-
-        % calculate probability for each rk
-        for i = 1:256 
-            sum = 0;
-            for j = 1:i
-                sum = sum + hist(j)/n;
-            end
-            histFunc(i) = floor(sum*255);
-        end
+        histFunc = transform(histogram, n)
         
         % transform image based on T(rk)
         for i = 1:row

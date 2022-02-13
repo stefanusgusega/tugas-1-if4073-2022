@@ -1,15 +1,20 @@
 function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_arr)
-%HISTOGRAM_SPECIFICATION Adjust the histogram of the source image based on specification image histogram
-%   Detailed explanation goes here
-% Should check the dimension?
+    %HISTOGRAM_SPECIFICATION Adjust the histogram of the source image based on specification image histogram
+    %   Detailed explanation goes here
+    % Should check the dimension?
 
-% Extract histograms
-source_img_hist = image_histogram(source_img_arr);
-spec_img_hist = image_histogram(spec_img_arr);
+    % Extract histograms
+    source_img_hist = image_histogram(source_img_arr);
+    spec_img_hist = image_histogram(spec_img_arr);
 
-% Switch case 1 channel (grayscale) or 3 channels (true color)
-% Example of switch case
-% Create histograms based on number of color channels
+    % Get transformation array
+    source_img_transformed_arr = transform(source_img_hist)
+    spec_img_transformed_arr = transform(spec_img_hist) 
+
+    % Switch case 1 channel (grayscale) or 3 channels (true color) --> kayaknya ditaruh di UI nya aja
+
+    % Example of switch case
+    % Create histograms based on number of color channels
             % switch size(im,3)
             %     case 1
             %         % Display the grayscale image
