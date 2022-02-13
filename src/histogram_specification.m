@@ -8,8 +8,32 @@ function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_a
     spec_img_hist = image_histogram(spec_img_arr);
 
     % Get transformation array
-    source_img_transformed_arr = transform(source_img_hist)
-    spec_img_transformed_arr = transform(spec_img_hist) 
+    source_img_transformed_arr = transform(source_img_hist, numel(source_img_arr));
+    spec_img_transformed_arr = transform(spec_img_hist, numel(spec_img_arr));
+
+    final_transform = zeros(256,1);
+
+    % Based on source image transformation array, invert the transformation
+    % Get distinct values of source image transformation array
+    % distinct_vals_src = unique(source_img_transformed_arr);
+    % distinct_vals_spec = unique(spec_img_transformed_arr);
+
+    % Get the mapping
+    for i = 1:256
+        [val, idx] = min(abs(spec_img_transformed_arr - source_img_transformed_arr(i)));
+        final_transform(i) = idx - 1; % Subtracted by 1 because the index is 1 - 256 and should be changed to image array value that is 0 - 255
+    end
+
+
+    % Transform the source image array based on final transform array
+    [height, width] = size(source_img_arr);
+    for j = 1:height
+        for k = 1:width
+            source_img_arr(j, k) = final_transform(source_img_arr(j, k) + 1); % Added by 1 because the image array value is 0 - 255
+        end
+    end
+
+    specified_img_arr = source_img_arr;
 
     % Switch case 1 channel (grayscale) or 3 channels (true color) --> kayaknya ditaruh di UI nya aja
 
