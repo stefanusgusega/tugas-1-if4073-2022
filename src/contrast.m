@@ -1,7 +1,7 @@
-function [imgOut] = contrast(fileName)
+function [imgOut] = contrast(imgIn)
 
     % read image
-    imgIn = imread(fileName);
+    %imgIn = imread(fileName);
 
     % image size
     % [row, col, depth] = size(imgIn);

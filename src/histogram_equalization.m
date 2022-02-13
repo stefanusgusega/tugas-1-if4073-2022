@@ -1,9 +1,9 @@
-function [imgOut] = histogram_equalization(fileName)
+function [imgOut] = histogram_equalization(imgIn)
 %HISTOGRAM_EQUALIZATION Summary of this function goes here
 %   Detailed explanation goes here
 
     % read image
-    imgIn = imread(fileName);
+    % imgIn = imread(fileName);
 
     % output initialization
     imgOut = imgIn;
