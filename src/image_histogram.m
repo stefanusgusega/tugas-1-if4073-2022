@@ -1,5 +1,5 @@
 function arr = image_histogram(img_arr)
-    %IMHIST Return an array of the distribution of an image that specified on img_file_path
+    %IMHIST Return an array of the distribution of an image array
     %   And show the histogram of the distribution using bar plot
     %   imread should be performed on GUI to be passed onto this function
 
