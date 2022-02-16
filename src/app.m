@@ -52,18 +52,22 @@ classdef app < matlab.apps.AppBase
     
     methods (Access = private)
         function updateimage(app, fname, tab_num)
-            try
-                im = imread(fname);
-            catch ME
-                % if problem reading image, display error message
-                uialert(app.UIFigure, ME.message, 'Image Error');
-                return;
+            if strcmp(fname,'gorilla.tif')
+                im = imread('gorilla.tif');
+            else
+                try
+                    im = imread(fname);
+                catch ME
+                    % if problem reading image, display error message
+                    uialert(app.UIFigure, ME.message, 'Image Error');
+                    return;
+                end
             end
 
-            imageaxes_arr = [app.ImageAxes_Cont_In, app.ImageAxes_HistEq_In, app.ImageAxes_HistSpec_In];
-            redaxes_arr = [app.RedAxes_Cont_In, app.RedAxes_HistEq_In, app.RedAxes_HistSpec_In];
-            greenaxes_arr = [app.GreenAxes_Cont_In, app.GreenAxes_HistEq_In, app.GreenAxes_HistSpec_In];
-            blueaxes_arr = [app.BlueAxes_Cont_In, app.BlueAxes_HistEq_In, app.BlueAxes_HistSpec_In];
+            imageaxes_arr = [app.ImageAxes_Contrast_In, app.ImageAxes_HistEq_In, app.ImageAxes_HistSpec_In];
+            redaxes_arr = [app.RedAxes_Contrast_In, app.RedAxes_HistEq_In, app.RedAxes_HistSpec_In];
+            greenaxes_arr = [app.GreenAxes_Contrast_In, app.GreenAxes_HistEq_In, app.GreenAxes_HistSpec_In];
+            blueaxes_arr = [app.BlueAxes_Contrast_In, app.BlueAxes_HistEq_In, app.BlueAxes_HistSpec_In];
 
             % assign current tab
             currImageAxes = imageaxes_arr(tab_num);
@@ -72,27 +76,41 @@ classdef app < matlab.apps.AppBase
             currBlueAxes = blueaxes_arr(tab_num);
 
             % display the image
-            imagesc(app.ImageAxes_HistEq_In, im);
+            
+            %try
+            imagesc(currImageAxes, im);
+            %catch ME
+                % if problem reading image, display error message
+            %    uialert(app.UIFigure, ME.message, 'Image Error');
+            %    return;
+            %end
 
             % create histograms based on number of color channel
             switch size(im,3)
                 case 1
                     % Display the grayscale image
                     % imagesc(currImageAxes,im);
+
+                    histr = image_histogram(im);
+                    histg = image_histogram(im);
+                    histb = image_histogram(im);
                     
                     % Plot all histograms with the same data for grayscale
-                    histr = histogram(currRedAxes, im, 'FaceColor',[1 0 0],'EdgeColor', 'none');
-                    histg = histogram(currGreenAxes, im, 'FaceColor',[0 1 0],'EdgeColor', 'none');
-                    histb = histogram(currBlueAxes, im, 'FaceColor',[0 0 1],'EdgeColor', 'none');
+                    bar(currRedAxes, histr, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currGreenAxes, histg, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currBlueAxes, histb, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
                     
                 case 3
                     % Display the truecolor image
                     % imagesc(currImageAxes,im);
                     
+                    histr = image_histogram(im(:,:,1));
+                    histg = image_histogram(im(:,:,2));
+                    histb = image_histogram(im(:,:,3));
                     % Plot the histograms
-                    histr = histogram(currRedAxes, im(:,:,1), 'FaceColor', [1 0 0], 'EdgeColor', 'none');
-                    histg = histogram(currGreenAxes, im(:,:,2), 'FaceColor', [0 1 0], 'EdgeColor', 'none');
-                    histb = histogram(currBlueAxes, im(:,:,3), 'FaceColor', [0 0 1], 'EdgeColor', 'none');
+                    bar(currRedAxes, histr, 'FaceColor', [1 0 0], 'EdgeColor', 'none');
+                    bar(currGreenAxes, histg, 'FaceColor', [0 1 0], 'EdgeColor', 'none');
+                    bar(currBlueAxes, histb, 'FaceColor', [0 0 1], 'EdgeColor', 'none');
                     
                 otherwise
                     % Error when image is not grayscale or truecolor
@@ -100,9 +118,9 @@ classdef app < matlab.apps.AppBase
                     return;
             end
                 % Get largest bin count
-                maxr = max(histr.BinCounts);
-                maxg = max(histg.BinCounts);
-                maxb = max(histb.BinCounts);
+                maxr = max(histr);
+                maxg = max(histg);
+                maxb = max(histb);
                 maxcount = max([maxr maxg maxb]);
                 
                 % Set y axes limits based on largest bin count
@@ -122,16 +140,16 @@ classdef app < matlab.apps.AppBase
         % Code that executes after component creation
         function startupFcn(app)
             %% Contrast Enhancement
-
-            %% Histogram Sepcification
             
+            %% Histogram Equalization
+            %disp("haloooooo");
             % Configure image axes
             app.ImageAxes_HistEq_In.Visible = 'off';
             app.ImageAxes_HistEq_In.Colormap = gray(256);
             axis(app.ImageAxes_HistEq_In, 'image');
             
             % Update the image and histograms
-            updateimage(app, 'gorilla.tif', 2);
+            updateimage(app, 'citra_acuan_2.jpg', 2);
 
             %% Histogram Specification
         end
@@ -139,13 +157,15 @@ classdef app < matlab.apps.AppBase
         % Callback function
         function LoadImageButtonPushed(app, event)
             % Display uigetfile dialog
+            disp("haloooooo sbelum");
             filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
             [f, p] = uigetfile(filterspec);
+            disp("haloooooo");
             
             % Make sure user didn't cancel uigetfile dialog
             if (ischar(p))
                fname = [p f];
-               updateimage(app, fname);
+               updateimage(app, fname, 2);
             end
         end
     end
@@ -363,8 +383,6 @@ classdef app < matlab.apps.AppBase
 
             % Create ImageAxes_HistEq_In
             app.ImageAxes_HistEq_In = uiaxes(app.HistogramEqualizationTab);
-            app.ImageAxes_HistEq_In.DataAspectRatio = [1 1 1];
-            app.ImageAxes_HistEq_In.PlotBoxAspectRatio = [1.17615176151762 1 1];
             app.ImageAxes_HistEq_In.XTick = [];
             app.ImageAxes_HistEq_In.YTick = [];
             app.ImageAxes_HistEq_In.Position = [38 452 351 303];
