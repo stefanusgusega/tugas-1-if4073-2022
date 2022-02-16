@@ -68,6 +68,7 @@ classdef app < matlab.apps.AppBase
     end
     
     methods (Access = private)
+
         function updateImage(app, fname, tab_num)
             if strcmp(fname,'gorilla.tif')
                 im = imread('gorilla.tif');
@@ -124,24 +125,29 @@ classdef app < matlab.apps.AppBase
             end      
         end
 
-        function updateSpecImage(app, im, imtarget)
+
+        function updateSpecImage(app, fname, tname)
             try
                 im = imread(fname);
+                imTarget = imread(tname);
             catch ME
                 % if problem reading image, display error message
                 uialert(app.UIFigure, ME.message, 'Image Error');
                 return;
             end
-            
-            
+
             % assign current tab input
-            currImageAxes = app.imageaxes_arr(tab_num);
-            
+            currImageAxes = app.imageaxes_arr(3);
+
+            % assign current tab target
+            currTargetAxes = app.ImageAxes_HistSpec_Target;
+
             % assign current tab output
-            currOutAxes = app.outaxes_arr(tab_num);    
+            currOutAxes = app.outaxes_arr(3);    
 
             % display the image
             imagesc(currImageAxes, im);
+            imagesc(currTargetAxes, imTarget);
 
             % create histograms based on number of color channel
             switch size(im,3)
@@ -150,35 +156,37 @@ classdef app < matlab.apps.AppBase
                     % imagesc(currImageAxes,im);
                    
                     % input hist
-                    displayHist(app, im, tab_num, 1, 1);
-               
+                    displayHist(app, im, 3, 1, 1);
+
+                    % target hist
+                    displayHist(app, imTarget, 3, -1, 1);
+
                     % output hist
-                    imgOut = getOutput(app, im, tab_num);
+                    imgOut = histogram_specification(im, imTarget);
                     imagesc(currOutAxes, imgOut);
-                    displayHist(app, imgOut, tab_num, 0, 1);
+                    displayHist(app, imgOut, 3, 0, 1);
 
                 case 3
                     % input hist
-                    displayHist(app, im, tab_num, 1, 0);
+                    displayHist(app, im, 3, 1, 0);
+
+                    % target hist
+                    displayHist(app, imTarget, 3, -1, 0);
                     
                     imgOut = im;
                     % output hist
-                    imgOut(:,:,1) = getOutput(app, im(:,:,1), tab_num);
-                    imgOut(:,:,2) = getOutput(app, im(:,:,2), tab_num);
-                    imgOut(:,:,3) = getOutput(app, im(:,:,3), tab_num);
+                    imgOut(:,:,1) = histogram_specification(im(:,:,1), imTarget(:,:,1));
+                    imgOut(:,:,2) = histogram_specification(im(:,:,2), imTarget(:,:,2));
+                    imgOut(:,:,3) = histogram_specification(im(:,:,3), imTarget(:,:,3));
 
                     imagesc(currOutAxes, imgOut);
-                    displayHist(app, imgOut, tab_num, 0, 0);
+                    displayHist(app, imgOut, 3, 0, 0);
                     
                 otherwise
                     % Error when image is not grayscale or truecolor
                     uialert(app.UIFigure, 'Image must be grayscale or truecolor.', 'Image Error');
                     return;
             end      
-
-            if isequal(tab_num,3)
-                halo;
-            end
         end
 
         % Function for getting output image
@@ -190,8 +198,6 @@ classdef app < matlab.apps.AppBase
                 case 2
                     imgOut = histogram_equalization(im);
                     disp("halo histeq");
-                case 3
-                    imgOut = histogram_specification(im);
                 otherwise
                     % Error when image is not grayscale or truecolor
                     uialert(app.UIFigure, 'Tab invalid.', 'Image Error');
@@ -213,6 +219,13 @@ classdef app < matlab.apps.AppBase
                     currRedAxes = app.redoutaxes_arr(tab_num);
                     currGreenAxes = app.greenoutaxes_arr(tab_num);
                     currBlueAxes = app.blueoutaxes_arr(tab_num);
+                case -1
+                    % assign current tab target
+                    currRedAxes = app.RedAxes_HistSpec_Target;
+                    disp("red");
+                    disp(currRedAxes);
+                    currGreenAxes = app.GreenAxes_HistSpec_Target;
+                    currBlueAxes = app.BlueAxes_HistSpec_Target;
                 otherwise
                     % Error when image is not grayscale or truecolor
                     uialert(app.UIFigure, 'Variable invalid.', 'Image Error');
@@ -262,7 +275,7 @@ classdef app < matlab.apps.AppBase
             app.blueaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
         end
 
-        function initiateImageAxesComponent(component)
+        function initiateImageAxesComponent(app, component)
             component.Visible = 'off';
             component.Colormap = gray(256);
             axis(component, 'image');
@@ -290,19 +303,20 @@ classdef app < matlab.apps.AppBase
             %% Histogram Equalization
             %disp("haloooooo");
             % Configure image axes
-            initiateImageAxesComponent(app.ImageAxes_HistEq_In);
-            initiateImageAxesComponent(app.ImageAxes_Contrast_In);
-            initiateImageAxesComponent(app.ImageAxes_HistSpec_In);
-            initiateImageAxesComponent(app.ImageAxes_HistSpec_Target);
-            initiateImageAxesComponent(app.ImageAxes_HistEq_Out);
-            initiateImageAxesComponent(app.ImageAxes_Contrast_Out);
-            initiateImageAxesComponent(app.ImageAxes_HistSpec_Out);
+            % Configure image axes
+            initiateImageAxesComponent(app, app.ImageAxes_HistEq_In);
+            initiateImageAxesComponent(app, app.ImageAxes_Contrast_In);
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_In);
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Target);
+            initiateImageAxesComponent(app, app.ImageAxes_HistEq_Out);
+            initiateImageAxesComponent(app, app.ImageAxes_Contrast_Out);
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Out);
             
             % Update the image and histograms
             updateImage(app, 'citra_acuan_2.jpg', 1);
             updateImage(app, 'citra_acuan_2.jpg', 2);
             % updateImage(app, 'citra_acuan_2.jpg', 3);
-            updateSpecImage(app, im, imtarget);
+            updateSpecImage(app, 'bridge_1.jpg', 'citra_acuan_2.jpg');
 
             %% Histogram Specification
         end

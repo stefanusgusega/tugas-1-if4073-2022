@@ -10,7 +10,7 @@ function [imgOut] = contrast(imgIn)
     % imgOut = imgIn;
 
     % show input image
-    figure,imshow(imgIn);
+    % figure,imshow(imgIn);
 
     % for each color
     % for i=1:depth
