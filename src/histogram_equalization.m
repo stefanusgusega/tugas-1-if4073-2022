@@ -35,11 +35,11 @@ function [imgOut] = histogram_equalization(imgIn)
     %disp(max(imgArr(:)));
     %disp(min(imgArr(:)));
 
-    figure,image_histogram(imgOut);
-    figure,image_histogram(histeq(imgIn));
+    %figure,image_histogram(imgOut);
+    %figure,image_histogram(histeq(imgIn));
     %hix(:,:,d) = histeq(imgArr);
     %end
-    figure,imshow(imgIn);
-    figure,imshow(imgOut);
+    %figure,imshow(imgIn);
+    %figure,imshow(imgOut);
     %figure,imshow(hix);
 end

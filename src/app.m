@@ -9,7 +9,7 @@ classdef app < matlab.apps.AppBase
         InputImageLabel             matlab.ui.control.Label
         SelectImageDropDown         matlab.ui.control.DropDown
         SelectImageDropDownLabel    matlab.ui.control.Label
-        BlueAxes_Contrast_In_2      matlab.ui.control.UIAxes
+        BlueAxes_Contrast_Out       matlab.ui.control.UIAxes
         GreenAxes_Contrast_Out      matlab.ui.control.UIAxes
         RedAxes_Contrast_Out        matlab.ui.control.UIAxes
         BlueAxes_Contrast_In        matlab.ui.control.UIAxes
@@ -50,8 +50,20 @@ classdef app < matlab.apps.AppBase
     end
 
     
+    properties (Access = private)
+        imageaxes_arr
+        redaxes_arr
+        greenaxes_arr
+        blueaxes_arr
+        outaxes_arr
+        redoutaxes_arr
+        greenoutaxes_arr
+        blueoutaxes_arr
+        
+    end
+    
     methods (Access = private)
-        function updateimage(app, fname, tab_num)
+        function updateImage(app, fname, tab_num)
             if strcmp(fname,'gorilla.tif')
                 im = imread('gorilla.tif');
             else
@@ -63,73 +75,129 @@ classdef app < matlab.apps.AppBase
                     return;
                 end
             end
-
-            imageaxes_arr = [app.ImageAxes_Contrast_In, app.ImageAxes_HistEq_In, app.ImageAxes_HistSpec_In];
-            redaxes_arr = [app.RedAxes_Contrast_In, app.RedAxes_HistEq_In, app.RedAxes_HistSpec_In];
-            greenaxes_arr = [app.GreenAxes_Contrast_In, app.GreenAxes_HistEq_In, app.GreenAxes_HistSpec_In];
-            blueaxes_arr = [app.BlueAxes_Contrast_In, app.BlueAxes_HistEq_In, app.BlueAxes_HistSpec_In];
-
-            % assign current tab
-            currImageAxes = imageaxes_arr(tab_num);
-            currRedAxes = redaxes_arr(tab_num);
-            currGreenAxes = greenaxes_arr(tab_num);
-            currBlueAxes = blueaxes_arr(tab_num);
+            
+            % assign current tab input
+            currImageAxes = app.imageaxes_arr(tab_num);
+            
+            % assign current tab output
+            currOutAxes = app.outaxes_arr(tab_num);    
 
             % display the image
-            
-            %try
             imagesc(currImageAxes, im);
-            %catch ME
-                % if problem reading image, display error message
-            %    uialert(app.UIFigure, ME.message, 'Image Error');
-            %    return;
-            %end
 
             % create histograms based on number of color channel
             switch size(im,3)
                 case 1
                     % Display the grayscale image
                     % imagesc(currImageAxes,im);
+                   
+                    % input hist
+                    displayHist(app, im, tab_num, 1, 1);
+               
+                    % output hist
+                    imgOut = getOutput(app, im, tab_num);
+                    imagesc(currOutAxes, imgOut);
+                    displayHist(app, imgOut, tab_num, 0, 1);
 
-                    histr = image_histogram(im);
-                    histg = image_histogram(im);
-                    histb = image_histogram(im);
-                    
-                    % Plot all histograms with the same data for grayscale
-                    bar(currRedAxes, histr, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
-                    bar(currGreenAxes, histg, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
-                    bar(currBlueAxes, histb, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
-                    
                 case 3
-                    % Display the truecolor image
-                    % imagesc(currImageAxes,im);
+                    % input hist
+                    displayHist(app, im, tab_num, 1, 0);
                     
-                    histr = image_histogram(im(:,:,1));
-                    histg = image_histogram(im(:,:,2));
-                    histb = image_histogram(im(:,:,3));
-                    % Plot the histograms
-                    bar(currRedAxes, histr, 'FaceColor', [1 0 0], 'EdgeColor', 'none');
-                    bar(currGreenAxes, histg, 'FaceColor', [0 1 0], 'EdgeColor', 'none');
-                    bar(currBlueAxes, histb, 'FaceColor', [0 0 1], 'EdgeColor', 'none');
+                    imgOut = im;
+                    % output hist
+                    imgOut(:,:,1) = getOutput(app, im(:,:,1), tab_num);
+                    imgOut(:,:,2) = getOutput(app, im(:,:,2), tab_num);
+                    imgOut(:,:,3) = getOutput(app, im(:,:,3), tab_num);
+
+                    imagesc(currOutAxes, imgOut);
+                    displayHist(app, imgOut, tab_num, 0, 0);
                     
                 otherwise
                     % Error when image is not grayscale or truecolor
                     uialert(app.UIFigure, 'Image must be grayscale or truecolor.', 'Image Error');
                     return;
+            end      
+        end
+
+        % Function for getting output image
+        function [imgOut] = getOutput(app, im, tab_num)
+            switch (tab_num)
+                case 1
+                    imgOut = contrast(im);
+                    disp("halo contrast");
+                case 2
+                    imgOut = histogram_equalization(im);
+                    disp("halo histeq");
+                case 3
+                    imgOut = histogram_specification(im);
+                otherwise
+                    % Error when image is not grayscale or truecolor
+                    uialert(app.UIFigure, 'Tab invalid.', 'Image Error');
+                    return;
             end
-                % Get largest bin count
-                maxr = max(histr);
-                maxg = max(histg);
-                maxb = max(histb);
-                maxcount = max([maxr maxg maxb]);
-                
-                % Set y axes limits based on largest bin count
-                redaxes_arr(tab_num).YLim = [0 maxcount];
-                redaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
-                greenaxes_arr(tab_num).YLim = [0 maxcount];
-                greenaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
-                blueaxes_arr(tab_num).YLim = [0 maxcount];
-                blueaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+        end
+        
+        % Function for displaying histogram
+        function displayHist(app, img, tab_num, is_input, is_grayscale)
+            % assign tab
+            switch (is_input)
+                case 1
+                    % assign current tab input
+                    currRedAxes = app.redaxes_arr(tab_num);
+                    currGreenAxes = app.greenaxes_arr(tab_num);
+                    currBlueAxes = app.blueaxes_arr(tab_num);
+                case 0
+                    % assign current tab output
+                    currRedAxes = app.redoutaxes_arr(tab_num);
+                    currGreenAxes = app.greenoutaxes_arr(tab_num);
+                    currBlueAxes = app.blueoutaxes_arr(tab_num);
+                otherwise
+                    % Error when image is not grayscale or truecolor
+                    uialert(app.UIFigure, 'Variable invalid.', 'Image Error');
+                    return;
+            end
+
+            % display histogram
+            switch (is_grayscale)
+                case 1
+                    histr = image_histogram(img);
+                    histg = image_histogram(img);
+                    histb = image_histogram(img);
+        
+                    % Plot all histograms with the same data for grayscale
+                    bar(currRedAxes, histr, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currGreenAxes, histg, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currBlueAxes, histb, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+
+                case 0
+                    histr = image_histogram(img(:,:,1));
+                    histg = image_histogram(img(:,:,2));
+                    histb = image_histogram(img(:,:,3));
+
+                    % Plot the histograms
+                    bar(currRedAxes, histr, 'FaceColor', [1 0 0], 'EdgeColor', 'none');
+                    bar(currGreenAxes, histg, 'FaceColor', [0 1 0], 'EdgeColor', 'none');
+                    bar(currBlueAxes, histb, 'FaceColor', [0 0 1], 'EdgeColor', 'none');
+
+                otherwise
+                    % Error when image is not grayscale or truecolor
+                    uialert(app.UIFigure, 'Image must be grayscale or truecolor.', 'Image Error');
+                    return;
+            end
+
+            % Get largest bin count
+            maxr = max(histr);
+            maxg = max(histg);
+            maxb = max(histb);
+            maxcount = max([maxr maxg maxb]);
+            
+            % Set y axes limits based on largest bin count
+            app.redaxes_arr(tab_num).YLim = [0 maxcount];
+            app.redaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+            app.greenaxes_arr(tab_num).YLim = [0 maxcount];
+            app.greenaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+            app.blueaxes_arr(tab_num).YLim = [0 maxcount];
+            app.blueaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
         end
     end
     
@@ -139,6 +207,16 @@ classdef app < matlab.apps.AppBase
 
         % Code that executes after component creation
         function startupFcn(app)
+            app.imageaxes_arr = [app.ImageAxes_Contrast_In, app.ImageAxes_HistEq_In, app.ImageAxes_HistSpec_In];
+            app.redaxes_arr = [app.RedAxes_Contrast_In, app.RedAxes_HistEq_In, app.RedAxes_HistSpec_In];
+            app.greenaxes_arr = [app.GreenAxes_Contrast_In, app.GreenAxes_HistEq_In, app.GreenAxes_HistSpec_In];
+            app.blueaxes_arr = [app.BlueAxes_Contrast_In, app.BlueAxes_HistEq_In, app.BlueAxes_HistSpec_In];
+        
+            app.outaxes_arr = [app.ImageAxes_Contrast_Out, app.ImageAxes_HistEq_Out, app.ImageAxes_HistSpec_Out];
+            app.redoutaxes_arr = [app.RedAxes_Contrast_Out, app.RedAxes_HistEq_Out, app.RedAxes_HistSpec_Out];
+            app.greenoutaxes_arr = [app.GreenAxes_Contrast_Out, app.GreenAxes_HistEq_Out, app.GreenAxes_HistSpec_Out];
+            app.blueoutaxes_arr = [app.BlueAxes_Contrast_Out, app.BlueAxes_HistEq_Out, app.BlueAxes_HistSpec_Out];
+            
             %% Contrast Enhancement
             
             %% Histogram Equalization
@@ -147,9 +225,31 @@ classdef app < matlab.apps.AppBase
             app.ImageAxes_HistEq_In.Visible = 'off';
             app.ImageAxes_HistEq_In.Colormap = gray(256);
             axis(app.ImageAxes_HistEq_In, 'image');
+
+            app.ImageAxes_Contrast_In.Visible = 'off';
+            app.ImageAxes_Contrast_In.Colormap = gray(256);
+            axis(app.ImageAxes_Contrast_In, 'image');
+
+            app.ImageAxes_HistSpec_In.Visible = 'off';
+            app.ImageAxes_HistSpec_In.Colormap = gray(256);
+            axis(app.ImageAxes_HistSpec_In, 'image');
+
+            app.ImageAxes_HistEq_Out.Visible = 'off';
+            app.ImageAxes_HistEq_Out.Colormap = gray(256);
+            axis(app.ImageAxes_HistEq_Out, 'image');
+
+            app.ImageAxes_Contrast_Out.Visible = 'off';
+            app.ImageAxes_Contrast_Out.Colormap = gray(256);
+            axis(app.ImageAxes_Contrast_Out, 'image');
+
+            app.ImageAxes_HistSpec_Out.Visible = 'off';
+            app.ImageAxes_HistSpec_Out.Colormap = gray(256);
+            axis(app.ImageAxes_HistSpec_Out, 'image');
             
             % Update the image and histograms
-            updateimage(app, 'citra_acuan_2.jpg', 2);
+            updateImage(app, 'citra_acuan_2.jpg', 1);
+            updateImage(app, 'citra_acuan_2.jpg', 2);
+            % updateImage(app, 'citra_acuan_2.jpg', 3);
 
             %% Histogram Specification
         end
@@ -221,8 +321,6 @@ classdef app < matlab.apps.AppBase
 
             % Create ImageAxes_Contrast_In
             app.ImageAxes_Contrast_In = uiaxes(app.ContrastEnhancementTab);
-            app.ImageAxes_Contrast_In.DataAspectRatio = [1 1 1];
-            app.ImageAxes_Contrast_In.PlotBoxAspectRatio = [1.17615176151762 1 1];
             app.ImageAxes_Contrast_In.XTick = [];
             app.ImageAxes_Contrast_In.YTick = [];
             app.ImageAxes_Contrast_In.Position = [38 452 351 303];
@@ -268,16 +366,16 @@ classdef app < matlab.apps.AppBase
             app.GreenAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_Contrast_Out.Position = [664 192 182 121];
 
-            % Create BlueAxes_Contrast_In_2
-            app.BlueAxes_Contrast_In_2 = uiaxes(app.ContrastEnhancementTab);
-            title(app.BlueAxes_Contrast_In_2, 'Blue')
-            xlabel(app.BlueAxes_Contrast_In_2, 'Intensity')
-            ylabel(app.BlueAxes_Contrast_In_2, 'Pixels')
-            zlabel(app.BlueAxes_Contrast_In_2, 'Z')
-            app.BlueAxes_Contrast_In_2.XLim = [0 255];
-            app.BlueAxes_Contrast_In_2.XTick = [0 128 255];
-            app.BlueAxes_Contrast_In_2.XTickLabel = {'0'; '128'; '255'};
-            app.BlueAxes_Contrast_In_2.Position = [664 59 182 121];
+            % Create BlueAxes_Contrast_Out
+            app.BlueAxes_Contrast_Out = uiaxes(app.ContrastEnhancementTab);
+            title(app.BlueAxes_Contrast_Out, 'Blue')
+            xlabel(app.BlueAxes_Contrast_Out, 'Intensity')
+            ylabel(app.BlueAxes_Contrast_Out, 'Pixels')
+            zlabel(app.BlueAxes_Contrast_Out, 'Z')
+            app.BlueAxes_Contrast_Out.XLim = [0 255];
+            app.BlueAxes_Contrast_Out.XTick = [0 128 255];
+            app.BlueAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
+            app.BlueAxes_Contrast_Out.Position = [664 59 182 121];
 
             % Create SelectImageDropDownLabel
             app.SelectImageDropDownLabel = uilabel(app.ContrastEnhancementTab);
@@ -446,8 +544,6 @@ classdef app < matlab.apps.AppBase
 
             % Create ImageAxes_HistSpec_In
             app.ImageAxes_HistSpec_In = uiaxes(app.HistogramSpecificationTab);
-            app.ImageAxes_HistSpec_In.DataAspectRatio = [1 1 1];
-            app.ImageAxes_HistSpec_In.PlotBoxAspectRatio = [1.17615176151762 1 1];
             app.ImageAxes_HistSpec_In.XTick = [];
             app.ImageAxes_HistSpec_In.YTick = [];
             app.ImageAxes_HistSpec_In.Position = [38 452 351 303];

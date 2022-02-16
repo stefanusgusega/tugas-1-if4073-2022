@@ -27,10 +27,10 @@ function [imgOut] = contrast(imgIn)
     imgOut = (imgIn-rmin).*(255/(rmax-rmin)); 
 
     % show histogram
-    figure,image_histogram(imgIn);
-    figure,image_histogram(imgOut);
+    %figure,image_histogram(imgIn);
+    %figure,image_histogram(imgOut);
     %end
 
     % show output color
-    figure,imshow(imgOut);
+    %figure,imshow(imgOut);
 end
