@@ -261,6 +261,12 @@ classdef app < matlab.apps.AppBase
             app.blueaxes_arr(tab_num).YLim = [0 maxcount];
             app.blueaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
         end
+
+        function initiateImageAxesComponent(component)
+            component.Visible = 'off';
+            component.Colormap = gray(256);
+            axis(component, 'image');
+        end
     end
     
 
@@ -284,33 +290,13 @@ classdef app < matlab.apps.AppBase
             %% Histogram Equalization
             %disp("haloooooo");
             % Configure image axes
-            app.ImageAxes_HistEq_In.Visible = 'off';
-            app.ImageAxes_HistEq_In.Colormap = gray(256);
-            axis(app.ImageAxes_HistEq_In, 'image');
-
-            app.ImageAxes_Contrast_In.Visible = 'off';
-            app.ImageAxes_Contrast_In.Colormap = gray(256);
-            axis(app.ImageAxes_Contrast_In, 'image');
-
-            app.ImageAxes_HistSpec_In.Visible = 'off';
-            app.ImageAxes_HistSpec_In.Colormap = gray(256);
-            axis(app.ImageAxes_HistSpec_In, 'image');
-
-            app.ImageAxes_HistSpec_Target.Visible = 'off';
-            app.ImageAxes_HistSpec_Target.Colormap = gray(256);
-            axis(app.ImageAxes_HistSpec_Target, 'image');
-
-            app.ImageAxes_HistEq_Out.Visible = 'off';
-            app.ImageAxes_HistEq_Out.Colormap = gray(256);
-            axis(app.ImageAxes_HistEq_Out, 'image');
-
-            app.ImageAxes_Contrast_Out.Visible = 'off';
-            app.ImageAxes_Contrast_Out.Colormap = gray(256);
-            axis(app.ImageAxes_Contrast_Out, 'image');
-
-            app.ImageAxes_HistSpec_Out.Visible = 'off';
-            app.ImageAxes_HistSpec_Out.Colormap = gray(256);
-            axis(app.ImageAxes_HistSpec_Out, 'image');
+            initiateImageAxesComponent(app.ImageAxes_HistEq_In);
+            initiateImageAxesComponent(app.ImageAxes_Contrast_In);
+            initiateImageAxesComponent(app.ImageAxes_HistSpec_In);
+            initiateImageAxesComponent(app.ImageAxes_HistSpec_Target);
+            initiateImageAxesComponent(app.ImageAxes_HistEq_Out);
+            initiateImageAxesComponent(app.ImageAxes_Contrast_Out);
+            initiateImageAxesComponent(app.ImageAxes_HistSpec_Out);
             
             % Update the image and histograms
             updateImage(app, 'citra_acuan_2.jpg', 1);
