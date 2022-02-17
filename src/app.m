@@ -209,17 +209,20 @@ classdef app < matlab.apps.AppBase
         function displayHist(app, img, tab_num, is_input, is_grayscale)
             % assign tab
             switch (is_input)
+                % input
                 case 1
                     % assign current tab input
                     currRedAxes = app.redaxes_arr(tab_num);
                     currGreenAxes = app.greenaxes_arr(tab_num);
                     currBlueAxes = app.blueaxes_arr(tab_num);
+                % output
                 case 0
                     % assign current tab output
                     currRedAxes = app.redoutaxes_arr(tab_num);
                     currGreenAxes = app.greenoutaxes_arr(tab_num);
                     currBlueAxes = app.blueoutaxes_arr(tab_num);
-                case -1
+                % target
+                case -1 
                     % assign current tab target
                     currRedAxes = app.RedAxes_HistSpec_Target;
                     disp("red");
@@ -267,12 +270,12 @@ classdef app < matlab.apps.AppBase
             maxcount = max([maxr maxg maxb]);
             
             % Set y axes limits based on largest bin count
-            app.redaxes_arr(tab_num).YLim = [0 maxcount];
-            app.redaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
-            app.greenaxes_arr(tab_num).YLim = [0 maxcount];
-            app.greenaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
-            app.blueaxes_arr(tab_num).YLim = [0 maxcount];
-            app.blueaxes_arr(tab_num).YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+            currRedAxes.YLim = [0 maxcount];
+            currRedAxes.YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+            currGreenAxes.YLim = [0 maxcount];
+            currGreenAxes.YTick = round([0 maxcount/2 maxcount], 2, 'significant');
+            currBlueAxes.YLim = [0 maxcount];
+            currBlueAxes.YTick = round([0 maxcount/2 maxcount], 2, 'significant');
         end
 
         function initiateImageAxesComponent(app, component)
@@ -298,27 +301,28 @@ classdef app < matlab.apps.AppBase
             app.greenoutaxes_arr = [app.GreenAxes_Contrast_Out, app.GreenAxes_HistEq_Out, app.GreenAxes_HistSpec_Out];
             app.blueoutaxes_arr = [app.BlueAxes_Contrast_Out, app.BlueAxes_HistEq_Out, app.BlueAxes_HistSpec_Out];
             
+             % image path
+            path = [pwd filesep '..' filesep 'images' filesep];
+
             %% Contrast Enhancement
-            
-            %% Histogram Equalization
-            %disp("haloooooo");
-            % Configure image axes
-            % Configure image axes
-            initiateImageAxesComponent(app, app.ImageAxes_HistEq_In);
             initiateImageAxesComponent(app, app.ImageAxes_Contrast_In);
-            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_In);
-            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Target);
-            initiateImageAxesComponent(app, app.ImageAxes_HistEq_Out);
             initiateImageAxesComponent(app, app.ImageAxes_Contrast_Out);
-            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Out);
             
-            % Update the image and histograms
-            updateImage(app, 'citra_acuan_2.jpg', 1);
-            updateImage(app, 'citra_acuan_2.jpg', 2);
-            % updateImage(app, 'citra_acuan_2.jpg', 3);
-            updateSpecImage(app, 'bridge_1.jpg', 'citra_acuan_2.jpg');
+            updateImage(app, [path 'office_room.jpg'], 1);
+
+            %% Histogram Equalization
+            initiateImageAxesComponent(app, app.ImageAxes_HistEq_In);
+            initiateImageAxesComponent(app, app.ImageAxes_HistEq_Out);
+
+            updateImage(app, [path 'citra_acuan_2.jpg'], 2);
 
             %% Histogram Specification
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_In);
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Target);
+            initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Out);
+
+            updateSpecImage(app, [path 'bridge_1.jpg'], [path 'citra_acuan_2.jpg']);
+
         end
 
         % Callback function
@@ -326,9 +330,9 @@ classdef app < matlab.apps.AppBase
             % Display uigetfile dialog
             disp("haloooooo sbelum");
             filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
-            [f, p] = uigetfile(filterspec);
             disp("haloooooo");
-            
+            [f, p] = uigetfile(filterspec);
+            disp("setelah uigetfile");
             % Make sure user didn't cancel uigetfile dialog
             if (ischar(p))
                fname = [p f];
