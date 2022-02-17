@@ -13,8 +13,5 @@ function arr = image_histogram(img_arr)
             arr(arr_idx) = arr(arr_idx) + 1;
         end
     end
-
-    %bar(arr);
-
 end
 

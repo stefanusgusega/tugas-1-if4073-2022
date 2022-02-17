@@ -1,9 +1,5 @@
 function [imgOut] = histogram_equalization(imgIn)
-%HISTOGRAM_EQUALIZATION Summary of this function goes here
-%   Detailed explanation goes here
-
-    % read image
-    % imgIn = imread(fileName);
+%HISTOGRAM_EQUALIZATION Equalize the histogram distribution of an image
 
     % output initialization
     imgOut = imgIn;
@@ -12,15 +8,9 @@ function [imgOut] = histogram_equalization(imgIn)
     % image size
     [row, col, depth] = size(imgIn);
     n = row * col;
-    disp(size(imgIn));
-    
-    % for each color
-    % for d = 1:depth
     
     %imgArr = imgIn(:,:,d);
     histogram = image_histogram(imgIn);
-    %disp(hist)
-    %disp(hist(200));
 
     % create T(rk) 
     histFunc = transform(histogram, n);
@@ -31,15 +21,4 @@ function [imgOut] = histogram_equalization(imgIn)
             imgOut(i,j) = histFunc(imgIn(i,j)+1);
         end
     end
-
-    %disp(max(imgArr(:)));
-    %disp(min(imgArr(:)));
-
-    %figure,image_histogram(imgOut);
-    %figure,image_histogram(histeq(imgIn));
-    %hix(:,:,d) = histeq(imgArr);
-    %end
-    %figure,imshow(imgIn);
-    %figure,imshow(imgOut);
-    %figure,imshow(hix);
 end

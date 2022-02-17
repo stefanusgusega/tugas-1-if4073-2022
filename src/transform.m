@@ -11,8 +11,6 @@ function [transformed_arr] = transform(histogram, total_pixel)
         for j = 1:i
             sum = sum + histogram(j)/total_pixel;
         end
-        % disp(transformed_arr(i));
-        % disp(floor(sum*255));
         transformed_arr(i) = floor(sum*255);
     end
 end
