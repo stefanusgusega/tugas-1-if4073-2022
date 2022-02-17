@@ -1,7 +1,11 @@
 function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_arr)
     %HISTOGRAM_SPECIFICATION Adjust the histogram of the source image based on specification image histogram
     %   Detailed explanation goes here
-    % Should check the dimension?
+
+    % Throw an exception
+    if (~isequal(size(source_img_arr), size(spec_img_arr)))
+        throw(MException('param:not-equal-dims', 'The dimension is not equal. Source image dimension : %s, Specified image dimension : %s', size(source_img_arr), size(spec_img_arr)))
+    end
 
     % Extract histograms
     source_img_hist = image_histogram(source_img_arr);
