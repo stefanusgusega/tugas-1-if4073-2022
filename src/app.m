@@ -341,21 +341,21 @@ classdef app < matlab.apps.AppBase
             initiateImageAxesComponent(app, app.ImageAxes_Contrast_In);
             initiateImageAxesComponent(app, app.ImageAxes_Contrast_Out);
             
-            updateImage(app, [path 'office_room.jpg'], 1);
+            updateImage(app, [path '2_contrast\mountain_view.jpg'], 1);
 
             %% Histogram Equalization
             initiateImageAxesComponent(app, app.ImageAxes_HistEq_In);
             initiateImageAxesComponent(app, app.ImageAxes_HistEq_Out);
 
-            updateImage(app, [path 'citra_acuan_2.jpg'], 2);
+            updateImage(app, [path '3_histeq\bean.jpg'], 2);
 
             %% Histogram Specification
             initiateImageAxesComponent(app, app.ImageAxes_HistSpec_In);
             initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Target);
             initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Out);
 
-            app.inputSpec = [path 'bridge_1.jpg'];
-            app.targetSpec = [path 'citra_acuan_2.jpg'];
+            app.inputSpec = [path '4_histspec\girl.png'];
+            app.targetSpec = [path '4_histspec\citra_acuan_1.png'];
 
             updateSpecImage(app, app.inputSpec, app.targetSpec);
 
@@ -473,6 +473,7 @@ classdef app < matlab.apps.AppBase
             app.ImageAxes_Contrast_Out = uiaxes(app.ContrastEnhancementTab);
             app.ImageAxes_Contrast_Out.DataAspectRatio = [1 1 1];
             app.ImageAxes_Contrast_Out.PlotBoxAspectRatio = [1.17615176151762 1 1];
+            app.ImageAxes_Contrast_Out.XLim = [0 1];
             app.ImageAxes_Contrast_Out.XTick = [];
             app.ImageAxes_Contrast_Out.YTick = [];
             app.ImageAxes_Contrast_Out.Position = [584 448 351 303];
