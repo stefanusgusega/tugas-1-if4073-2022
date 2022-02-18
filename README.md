@@ -9,7 +9,15 @@ We implement many operations to enhance the image, such as intensity histogram, 
 2. Go to ```src/``` folder.
 3. Double-click ```app.mlapp```.
 4. A window will be opened and the GUI is being run and every tab is already initiated with images.
+5. Sample images for every task can be found in the 'images' folder.
 
 ## Authors
 - 13518089 Annisa Rahim
 - 13518149 Stefanus Gusega Gunawan
+
+## Image Souces
+- http://www.imageprocessingplace.com/DIP-3E/dip3e_book_images_downloads.htm 
+- https://www.researchgate.net/figure/Example-of-low-contrast-images-and-corresponding-results-of-intensity-normalization-and_fig1_281118372 
+- https://hhsrop.wordpress.com/2020/01/06/learning-to-see-in-black-and-white/low-contrast-ex05/ 
+- https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/ 
+- https://medium.com/@jovana.savic9494/image-contrast-increase-866b7eeac8c2
