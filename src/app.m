@@ -157,7 +157,7 @@ classdef app < matlab.apps.AppBase
                     % input hist
                     displayHist(app, im, 3, 1, 1);
                     
-                    if size(imTarget,3)
+                    if (size(imTarget,3)==3)
                         % target hist
                         displayHist(app, imTarget, 3, -1, 0);
                         
@@ -194,7 +194,7 @@ classdef app < matlab.apps.AppBase
                     displayHist(app, imTarget, 3, -1, 0);
                     imgOut = im;
 
-                    if size(imTarget,1)
+                    if (size(imTarget,3)==1)
                         % output hist
                         try
                             imgOut(:,:,1) = histogram_specification(im(:,:,1), imTarget);
@@ -241,6 +241,7 @@ classdef app < matlab.apps.AppBase
         
         % Function for displaying histogram
         function displayHist(app, img, tab_num, is_input, is_grayscale)
+            grayLevels = 0 : 255;
             % assign tab
             switch (is_input)
                 % input
@@ -275,9 +276,9 @@ classdef app < matlab.apps.AppBase
                     histb = image_histogram(img);
         
                     % Plot all histograms with the same data for grayscale
-                    bar(currRedAxes, histr, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
-                    bar(currGreenAxes, histg, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
-                    bar(currBlueAxes, histb, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currRedAxes, grayLevels, histr, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currGreenAxes, grayLevels, histg, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
+                    bar(currBlueAxes, grayLevels, histb, 'FaceColor',[0.5 0.5 0.5],'EdgeColor', 'none');
 
                 case 0
                     histr = image_histogram(img(:,:,1));
@@ -285,9 +286,9 @@ classdef app < matlab.apps.AppBase
                     histb = image_histogram(img(:,:,3));
 
                     % Plot the histograms
-                    bar(currRedAxes, histr, 'FaceColor', [1 0 0], 'EdgeColor', 'none');
-                    bar(currGreenAxes, histg, 'FaceColor', [0 1 0], 'EdgeColor', 'none');
-                    bar(currBlueAxes, histb, 'FaceColor', [0 0 1], 'EdgeColor', 'none');
+                    bar(currRedAxes, grayLevels, histr, 'FaceColor', [1 0 0], 'EdgeColor', 'none');
+                    bar(currGreenAxes, grayLevels, histg, 'FaceColor', [0 1 0], 'EdgeColor', 'none');
+                    bar(currBlueAxes, grayLevels, histb, 'FaceColor', [0 0 1], 'EdgeColor', 'none');
 
                 otherwise
                     % Error when image is not grayscale or truecolor
@@ -450,7 +451,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.RedAxes_Contrast_In, 'Z')
             app.RedAxes_Contrast_In.XLim = [0 255];
             app.RedAxes_Contrast_In.XTick = [0 128 255];
-            app.RedAxes_Contrast_In.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_Contrast_In.Position = [124 320 182 121];
 
             % Create GreenAxes_Contrast_In
@@ -461,7 +461,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_Contrast_In, 'Z')
             app.GreenAxes_Contrast_In.XLim = [0 255];
             app.GreenAxes_Contrast_In.XTick = [0 128 255];
-            app.GreenAxes_Contrast_In.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_Contrast_In.Position = [124 192 182 121];
 
             % Create ImageAxes_Contrast_In
@@ -486,7 +485,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_Contrast_In, 'Z')
             app.BlueAxes_Contrast_In.XLim = [0 255];
             app.BlueAxes_Contrast_In.XTick = [0 128 255];
-            app.BlueAxes_Contrast_In.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_Contrast_In.Position = [124 60 182 121];
 
             % Create RedAxes_Contrast_Out
@@ -497,7 +495,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.RedAxes_Contrast_Out, 'Z')
             app.RedAxes_Contrast_Out.XLim = [0 255];
             app.RedAxes_Contrast_Out.XTick = [0 128 255];
-            app.RedAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_Contrast_Out.Position = [664 320 182 121];
 
             % Create GreenAxes_Contrast_Out
@@ -508,7 +505,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_Contrast_Out, 'Z')
             app.GreenAxes_Contrast_Out.XLim = [0 255];
             app.GreenAxes_Contrast_Out.XTick = [0 128 255];
-            app.GreenAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_Contrast_Out.Position = [664 192 182 121];
 
             % Create BlueAxes_Contrast_Out
@@ -519,7 +515,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_Contrast_Out, 'Z')
             app.BlueAxes_Contrast_Out.XLim = [0 255];
             app.BlueAxes_Contrast_Out.XTick = [0 128 255];
-            app.BlueAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_Contrast_Out.Position = [664 59 182 121];
 
             % Create InputImageLabel
@@ -554,7 +549,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.RedAxes_HistEq_In, 'Z')
             app.RedAxes_HistEq_In.XLim = [0 255];
             app.RedAxes_HistEq_In.XTick = [0 128 255];
-            app.RedAxes_HistEq_In.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_HistEq_In.Position = [124 320 182 121];
 
             % Create GreenAxes_HistEq_In
@@ -565,7 +559,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_HistEq_In, 'Z')
             app.GreenAxes_HistEq_In.XLim = [0 255];
             app.GreenAxes_HistEq_In.XTick = [0 128 255];
-            app.GreenAxes_HistEq_In.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_HistEq_In.Position = [124 192 182 121];
 
             % Create ImageAxes_HistEq_Out
@@ -584,7 +577,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_HistEq_In, 'Z')
             app.BlueAxes_HistEq_In.XLim = [0 255];
             app.BlueAxes_HistEq_In.XTick = [0 128 255];
-            app.BlueAxes_HistEq_In.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_HistEq_In.Position = [124 60 182 121];
 
             % Create RedAxes_HistEq_Out
@@ -595,7 +587,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.RedAxes_HistEq_Out, 'Z')
             app.RedAxes_HistEq_Out.XLim = [0 255];
             app.RedAxes_HistEq_Out.XTick = [0 128 255];
-            app.RedAxes_HistEq_Out.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_HistEq_Out.Position = [664 320 182 121];
 
             % Create GreenAxes_HistEq_Out
@@ -606,7 +597,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_HistEq_Out, 'Z')
             app.GreenAxes_HistEq_Out.XLim = [0 255];
             app.GreenAxes_HistEq_Out.XTick = [0 128 255];
-            app.GreenAxes_HistEq_Out.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_HistEq_Out.Position = [664 192 182 121];
 
             % Create BlueAxes_HistEq_Out
@@ -617,7 +607,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_HistEq_Out, 'Z')
             app.BlueAxes_HistEq_Out.XLim = [0 255];
             app.BlueAxes_HistEq_Out.XTick = [0 128 255];
-            app.BlueAxes_HistEq_Out.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_HistEq_Out.Position = [664 60 182 121];
 
             % Create ImageAxes_HistEq_In
@@ -660,7 +649,6 @@ classdef app < matlab.apps.AppBase
             app.RedAxes_HistSpec_In.YLim = [0 1];
             app.RedAxes_HistSpec_In.ZLim = [0 255];
             app.RedAxes_HistSpec_In.XTick = [0 128 255];
-            app.RedAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_HistSpec_In.Position = [97 322 182 121];
 
             % Create GreenAxes_HistSpec_In
@@ -671,7 +659,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_HistSpec_In, 'Z')
             app.GreenAxes_HistSpec_In.XLim = [0 255];
             app.GreenAxes_HistSpec_In.XTick = [0 128 255];
-            app.GreenAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_HistSpec_In.Position = [97 194 182 121];
 
             % Create ImageAxes_HistSpec_In
@@ -696,7 +683,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_HistSpec_In, 'Z')
             app.BlueAxes_HistSpec_In.XLim = [0 255];
             app.BlueAxes_HistSpec_In.XTick = [0 128 255];
-            app.BlueAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_HistSpec_In.Position = [97 62 182 121];
 
             % Create RedAxes_HistSpec_Out
@@ -707,7 +693,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.RedAxes_HistSpec_Out, 'Z')
             app.RedAxes_HistSpec_Out.XLim = [0 255];
             app.RedAxes_HistSpec_Out.XTick = [0 128 255];
-            app.RedAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_HistSpec_Out.Position = [696 322 182 121];
 
             % Create GreenAxes_HistSpec_Out
@@ -718,7 +703,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_HistSpec_Out, 'Z')
             app.GreenAxes_HistSpec_Out.XLim = [0 255];
             app.GreenAxes_HistSpec_Out.XTick = [0 128 255];
-            app.GreenAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_HistSpec_Out.Position = [696 194 182 121];
 
             % Create BlueAxes_HistSpec_Out
@@ -729,7 +713,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_HistSpec_Out, 'Z')
             app.BlueAxes_HistSpec_Out.XLim = [0 255];
             app.BlueAxes_HistSpec_Out.XTick = [0 128 255];
-            app.BlueAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_HistSpec_Out.Position = [696 62 182 121];
 
             % Create ImageAxes_HistSpec_Target
@@ -750,7 +733,6 @@ classdef app < matlab.apps.AppBase
             app.RedAxes_HistSpec_Target.YLim = [0 1];
             app.RedAxes_HistSpec_Target.ZLim = [0 255];
             app.RedAxes_HistSpec_Target.XTick = [0 128 255];
-            app.RedAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
             app.RedAxes_HistSpec_Target.Position = [400 322 182 121];
 
             % Create GreenAxes_HistSpec_Target
@@ -761,7 +743,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.GreenAxes_HistSpec_Target, 'Z')
             app.GreenAxes_HistSpec_Target.XLim = [0 255];
             app.GreenAxes_HistSpec_Target.XTick = [0 128 255];
-            app.GreenAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
             app.GreenAxes_HistSpec_Target.Position = [400 194 182 121];
 
             % Create BlueAxes_HistSpec_Target
@@ -772,7 +753,6 @@ classdef app < matlab.apps.AppBase
             zlabel(app.BlueAxes_HistSpec_Target, 'Z')
             app.BlueAxes_HistSpec_Target.XLim = [0 255];
             app.BlueAxes_HistSpec_Target.XTick = [0 128 255];
-            app.BlueAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_HistSpec_Target.Position = [400 62 182 121];
 
             % Create InputImageLabel_3
