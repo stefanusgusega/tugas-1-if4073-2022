@@ -4,7 +4,7 @@ function [specified_img_arr] = histogram_specification(source_img_arr,spec_img_a
 
     % Throw an exception
     if (~isequal(size(source_img_arr), size(spec_img_arr)))
-        throw(MException('param:not-equal-dims', 'The dimension is not equal. Source image dimension : %s, Specified image dimension : %s', size(source_img_arr), size(spec_img_arr)))
+        throw(MException('dimensions:notEqual', 'The dimensions are not equal. Source image dimension : (%d, %d), Specified image dimension : (%d, %d)', size(source_img_arr, 1), size(source_img_arr, 2), size(spec_img_arr, 1), size(spec_img_arr, 2)))
     end
 
     % Extract histograms
