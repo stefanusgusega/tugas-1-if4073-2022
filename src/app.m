@@ -2,56 +2,51 @@ classdef app < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
-        UIFigure                    matlab.ui.Figure
-        TabGroup                    matlab.ui.container.TabGroup
-        ContrastEnhancementTab      matlab.ui.container.Tab
-        OutputImageLabel            matlab.ui.control.Label
-        InputImageLabel             matlab.ui.control.Label
-        SelectImageDropDown         matlab.ui.control.DropDown
-        SelectImageDropDownLabel    matlab.ui.control.Label
-        BlueAxes_Contrast_Out       matlab.ui.control.UIAxes
-        GreenAxes_Contrast_Out      matlab.ui.control.UIAxes
-        RedAxes_Contrast_Out        matlab.ui.control.UIAxes
-        BlueAxes_Contrast_In        matlab.ui.control.UIAxes
-        ImageAxes_Contrast_Out      matlab.ui.control.UIAxes
-        ImageAxes_Contrast_In       matlab.ui.control.UIAxes
-        GreenAxes_Contrast_In       matlab.ui.control.UIAxes
-        RedAxes_Contrast_In         matlab.ui.control.UIAxes
-        HistogramEqualizationTab    matlab.ui.container.Tab
-        LoadImageButton             matlab.ui.control.Button
-        SelectImageDropDown_2       matlab.ui.control.DropDown
-        SelectImageDropDown_2Label  matlab.ui.control.Label
-        OutputImageLabel_2          matlab.ui.control.Label
-        InputImageLabel_2           matlab.ui.control.Label
-        ImageAxes_HistEq_In         matlab.ui.control.UIAxes
-        BlueAxes_HistEq_Out         matlab.ui.control.UIAxes
-        GreenAxes_HistEq_Out        matlab.ui.control.UIAxes
-        RedAxes_HistEq_Out          matlab.ui.control.UIAxes
-        BlueAxes_HistEq_In          matlab.ui.control.UIAxes
-        ImageAxes_HistEq_Out        matlab.ui.control.UIAxes
-        GreenAxes_HistEq_In         matlab.ui.control.UIAxes
-        RedAxes_HistEq_In           matlab.ui.control.UIAxes
-        HistogramSpecificationTab   matlab.ui.container.Tab
-        TargetImageDropDown_2       matlab.ui.control.DropDown
-        TargetImageDropDown_2Label  matlab.ui.control.Label
-        SelectImageDropDown_3       matlab.ui.control.DropDown
-        SelectImageDropDown_3Label  matlab.ui.control.Label
-        TargetImageLabel            matlab.ui.control.Label
-        OutputImageLabel_3          matlab.ui.control.Label
-        InputImageLabel_3           matlab.ui.control.Label
-        BlueAxes_HistSpec_Target    matlab.ui.control.UIAxes
-        GreenAxes_HistSpec_Target   matlab.ui.control.UIAxes
-        RedAxes_HistSpec_Target     matlab.ui.control.UIAxes
-        ImageAxes_HistSpec_Target   matlab.ui.control.UIAxes
-        BlueAxes_HistSpec_Out       matlab.ui.control.UIAxes
-        GreenAxes_HistSpec_Out      matlab.ui.control.UIAxes
-        RedAxes_HistSpec_Out        matlab.ui.control.UIAxes
-        BlueAxes_HistSpec_In        matlab.ui.control.UIAxes
-        ImageAxes_HistSpec_Out      matlab.ui.control.UIAxes
-        ImageAxes_HistSpec_In       matlab.ui.control.UIAxes
-        GreenAxes_HistSpec_In       matlab.ui.control.UIAxes
-        RedAxes_HistSpec_In         matlab.ui.control.UIAxes
-        UIAxes19                    matlab.ui.control.UIAxes
+        UIFigure                     matlab.ui.Figure
+        TabGroup                     matlab.ui.container.TabGroup
+        ContrastEnhancementTab       matlab.ui.container.Tab
+        LoadImageButton_Contrast     matlab.ui.control.Button
+        OutputImageLabel             matlab.ui.control.Label
+        InputImageLabel              matlab.ui.control.Label
+        BlueAxes_Contrast_Out        matlab.ui.control.UIAxes
+        GreenAxes_Contrast_Out       matlab.ui.control.UIAxes
+        RedAxes_Contrast_Out         matlab.ui.control.UIAxes
+        BlueAxes_Contrast_In         matlab.ui.control.UIAxes
+        ImageAxes_Contrast_Out       matlab.ui.control.UIAxes
+        ImageAxes_Contrast_In        matlab.ui.control.UIAxes
+        GreenAxes_Contrast_In        matlab.ui.control.UIAxes
+        RedAxes_Contrast_In          matlab.ui.control.UIAxes
+        HistogramEqualizationTab     matlab.ui.container.Tab
+        LoadImageButton_HistEq       matlab.ui.control.Button
+        OutputImageLabel_2           matlab.ui.control.Label
+        InputImageLabel_2            matlab.ui.control.Label
+        ImageAxes_HistEq_In          matlab.ui.control.UIAxes
+        BlueAxes_HistEq_Out          matlab.ui.control.UIAxes
+        GreenAxes_HistEq_Out         matlab.ui.control.UIAxes
+        RedAxes_HistEq_Out           matlab.ui.control.UIAxes
+        BlueAxes_HistEq_In           matlab.ui.control.UIAxes
+        ImageAxes_HistEq_Out         matlab.ui.control.UIAxes
+        GreenAxes_HistEq_In          matlab.ui.control.UIAxes
+        RedAxes_HistEq_In            matlab.ui.control.UIAxes
+        HistogramSpecificationTab    matlab.ui.container.Tab
+        LoadImageButton_HistSpec_Target  matlab.ui.control.Button
+        LoadImageButton_HistSpec_In  matlab.ui.control.Button
+        TargetImageLabel             matlab.ui.control.Label
+        OutputImageLabel_3           matlab.ui.control.Label
+        InputImageLabel_3            matlab.ui.control.Label
+        BlueAxes_HistSpec_Target     matlab.ui.control.UIAxes
+        GreenAxes_HistSpec_Target    matlab.ui.control.UIAxes
+        RedAxes_HistSpec_Target      matlab.ui.control.UIAxes
+        ImageAxes_HistSpec_Target    matlab.ui.control.UIAxes
+        BlueAxes_HistSpec_Out        matlab.ui.control.UIAxes
+        GreenAxes_HistSpec_Out       matlab.ui.control.UIAxes
+        RedAxes_HistSpec_Out         matlab.ui.control.UIAxes
+        BlueAxes_HistSpec_In         matlab.ui.control.UIAxes
+        ImageAxes_HistSpec_Out       matlab.ui.control.UIAxes
+        ImageAxes_HistSpec_In        matlab.ui.control.UIAxes
+        GreenAxes_HistSpec_In        matlab.ui.control.UIAxes
+        RedAxes_HistSpec_In          matlab.ui.control.UIAxes
+        UIAxes19                     matlab.ui.control.UIAxes
     end
 
     
@@ -65,6 +60,11 @@ classdef app < matlab.apps.AppBase
         greenoutaxes_arr
         blueoutaxes_arr
         
+    end
+    
+    properties (Access = public)
+        inputSpec;  % input file name for histogram specification
+        targetSpec; % target file name for histogram specification
     end
     
     methods (Access = private)
@@ -125,7 +125,6 @@ classdef app < matlab.apps.AppBase
             end      
         end
 
-
         function updateSpecImage(app, fname, tname)
             try
                 im = imread(fname);
@@ -157,12 +156,33 @@ classdef app < matlab.apps.AppBase
                    
                     % input hist
                     displayHist(app, im, 3, 1, 1);
+                    
+                    if size(imTarget,3)
+                        % target hist
+                        displayHist(app, imTarget, 3, -1, 0);
+                        
+                        imgOut = im;
+                        % output hist
+                        try 
+                            imgOut(:,:,1) = histogram_specification(im, imTarget(:,:,1));
+                            imgOut(:,:,2) = histogram_specification(im, imTarget(:,:,2));
+                            imgOut(:,:,3) = histogram_specification(im, imTarget(:,:,3));
+                        catch ME
+                            uialert(app.UIFigure, ME.message, 'Inconvenient Size');
+                            return;
+                        end
+                    else
+                        % target hist
+                        displayHist(app, imTarget, 3, -1, 1);
 
-                    % target hist
-                    displayHist(app, imTarget, 3, -1, 1);
-
-                    % output hist
-                    imgOut = histogram_specification(im, imTarget);
+                        % output hist
+                        try
+                            imgOut = histogram_specification(im, imTarget);
+                        catch ME
+                            uialert(app.UIFigure, ME.message, 'Inconvenient Size');
+                            return;
+                        end
+                    end
                     imagesc(currOutAxes, imgOut);
                     displayHist(app, imgOut, 3, 0, 1);
 
@@ -172,12 +192,28 @@ classdef app < matlab.apps.AppBase
 
                     % target hist
                     displayHist(app, imTarget, 3, -1, 0);
-                    
                     imgOut = im;
-                    % output hist
-                    imgOut(:,:,1) = histogram_specification(im(:,:,1), imTarget(:,:,1));
-                    imgOut(:,:,2) = histogram_specification(im(:,:,2), imTarget(:,:,2));
-                    imgOut(:,:,3) = histogram_specification(im(:,:,3), imTarget(:,:,3));
+
+                    if size(imTarget,1)
+                        % output hist
+                        try
+                            imgOut(:,:,1) = histogram_specification(im(:,:,1), imTarget);
+                            imgOut(:,:,2) = histogram_specification(im(:,:,2), imTarget);
+                            imgOut(:,:,3) = histogram_specification(im(:,:,3), imTarget);
+                        catch ME
+                            uialert(app.UIFigure, ME.message, 'Inconvenient Size');
+                            return;
+                        end
+                    else
+                        try
+                            imgOut(:,:,1) = histogram_specification(im(:,:,1), imTarget(:,:,1));
+                            imgOut(:,:,2) = histogram_specification(im(:,:,2), imTarget(:,:,2));
+                            imgOut(:,:,3) = histogram_specification(im(:,:,3), imTarget(:,:,3));
+                        catch ME
+                            uialert(app.UIFigure, ME.message, 'Inconvenient Size');
+                            return;
+                        end    
+                    end
 
                     imagesc(currOutAxes, imgOut);
                     displayHist(app, imgOut, 3, 0, 0);
@@ -194,10 +230,8 @@ classdef app < matlab.apps.AppBase
             switch (tab_num)
                 case 1
                     imgOut = contrast(im);
-                    disp("halo contrast");
                 case 2
                     imgOut = histogram_equalization(im);
-                    disp("halo histeq");
                 otherwise
                     % Error when image is not grayscale or truecolor
                     uialert(app.UIFigure, 'Tab invalid.', 'Image Error');
@@ -225,8 +259,6 @@ classdef app < matlab.apps.AppBase
                 case -1 
                     % assign current tab target
                     currRedAxes = app.RedAxes_HistSpec_Target;
-                    disp("red");
-                    disp(currRedAxes);
                     currGreenAxes = app.GreenAxes_HistSpec_Target;
                     currBlueAxes = app.BlueAxes_HistSpec_Target;
                 otherwise
@@ -321,22 +353,64 @@ classdef app < matlab.apps.AppBase
             initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Target);
             initiateImageAxesComponent(app, app.ImageAxes_HistSpec_Out);
 
-            updateSpecImage(app, [path 'bridge_1.jpg'], [path 'citra_acuan_2.jpg']);
+            app.inputSpec = [path 'bridge_1.jpg'];
+            app.targetSpec = [path 'citra_acuan_2.jpg'];
+
+            updateSpecImage(app, app.inputSpec, app.targetSpec);
 
         end
 
-        % Callback function
+        % Button pushed function: LoadImageButton_HistEq
         function LoadImageButtonPushed(app, event)
             % Display uigetfile dialog
-            disp("haloooooo sbelum");
             filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
-            disp("haloooooo");
             [f, p] = uigetfile(filterspec);
-            disp("setelah uigetfile");
+            
             % Make sure user didn't cancel uigetfile dialog
             if (ischar(p))
                fname = [p f];
-               updateimage(app, fname, 2);
+               updateImage(app, fname, 2);
+            end
+        end
+
+        % Button pushed function: LoadImageButton_Contrast
+        function LoadImageButton_ContrastPushed(app, event)
+            % Display uigetfile dialog
+            filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
+            [f, p] = uigetfile(filterspec);
+            
+            % Make sure user didn't cancel uigetfile dialog
+            if (ischar(p))
+               fname = [p f];
+               updateImage(app, fname, 1);
+            end
+        end
+
+        % Button pushed function: LoadImageButton_HistSpec_Target
+        function LoadImageButton_HistSpec_TargetPushed(app, event)
+            % Display uigetfile dialog
+            filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
+            [f, p] = uigetfile(filterspec);
+            
+            % Make sure user didn't cancel uigetfile dialog
+            if (ischar(p))
+               fname = [p f];
+               updateSpecImage(app, app.inputSpec, fname);
+               app.targetSpec = fname;
+            end
+        end
+
+        % Button pushed function: LoadImageButton_HistSpec_In
+        function LoadImageButton_HistSpec_InPushed(app, event)
+            % Display uigetfile dialog
+            filterspec = {'*.jpg;*.tif;*.png;*.gif','All Image Files'};
+            [f, p] = uigetfile(filterspec);
+            
+            % Make sure user didn't cancel uigetfile dialog
+            if (ischar(p))
+               fname = [p f];
+               updateSpecImage(app, fname, app.targetSpec);
+               app.inputSpec = fname;
             end
         end
     end
@@ -448,16 +522,6 @@ classdef app < matlab.apps.AppBase
             app.BlueAxes_Contrast_Out.XTickLabel = {'0'; '128'; '255'};
             app.BlueAxes_Contrast_Out.Position = [664 59 182 121];
 
-            % Create SelectImageDropDownLabel
-            app.SelectImageDropDownLabel = uilabel(app.ContrastEnhancementTab);
-            app.SelectImageDropDownLabel.HorizontalAlignment = 'right';
-            app.SelectImageDropDownLabel.Position = [409 394 75 22];
-            app.SelectImageDropDownLabel.Text = 'Select Image';
-
-            % Create SelectImageDropDown
-            app.SelectImageDropDown = uidropdown(app.ContrastEnhancementTab);
-            app.SelectImageDropDown.Position = [489 388 89 33];
-
             % Create InputImageLabel
             app.InputImageLabel = uilabel(app.ContrastEnhancementTab);
             app.InputImageLabel.FontSize = 16;
@@ -471,6 +535,12 @@ classdef app < matlab.apps.AppBase
             app.OutputImageLabel.FontWeight = 'bold';
             app.OutputImageLabel.Position = [614 747 108 22];
             app.OutputImageLabel.Text = 'Output Image';
+
+            % Create LoadImageButton_Contrast
+            app.LoadImageButton_Contrast = uibutton(app.ContrastEnhancementTab, 'push');
+            app.LoadImageButton_Contrast.ButtonPushedFcn = createCallbackFcn(app, @LoadImageButton_ContrastPushed, true);
+            app.LoadImageButton_Contrast.Position = [438 394 100 22];
+            app.LoadImageButton_Contrast.Text = 'Load Image';
 
             % Create HistogramEqualizationTab
             app.HistogramEqualizationTab = uitab(app.TabGroup);
@@ -570,20 +640,11 @@ classdef app < matlab.apps.AppBase
             app.OutputImageLabel_2.Position = [611 745 108 22];
             app.OutputImageLabel_2.Text = 'Output Image';
 
-            % Create SelectImageDropDown_2Label
-            app.SelectImageDropDown_2Label = uilabel(app.HistogramEqualizationTab);
-            app.SelectImageDropDown_2Label.HorizontalAlignment = 'right';
-            app.SelectImageDropDown_2Label.Position = [408 393 75 22];
-            app.SelectImageDropDown_2Label.Text = 'Select Image';
-
-            % Create SelectImageDropDown_2
-            app.SelectImageDropDown_2 = uidropdown(app.HistogramEqualizationTab);
-            app.SelectImageDropDown_2.Position = [488 387 89 33];
-
-            % Create LoadImageButton
-            app.LoadImageButton = uibutton(app.HistogramEqualizationTab, 'push');
-            app.LoadImageButton.Position = [443 330 100 22];
-            app.LoadImageButton.Text = 'Load Image';
+            % Create LoadImageButton_HistEq
+            app.LoadImageButton_HistEq = uibutton(app.HistogramEqualizationTab, 'push');
+            app.LoadImageButton_HistEq.ButtonPushedFcn = createCallbackFcn(app, @LoadImageButtonPushed, true);
+            app.LoadImageButton_HistEq.Position = [438 393 100 22];
+            app.LoadImageButton_HistEq.Text = 'Load Image';
 
             % Create HistogramSpecificationTab
             app.HistogramSpecificationTab = uitab(app.TabGroup);
@@ -600,7 +661,7 @@ classdef app < matlab.apps.AppBase
             app.RedAxes_HistSpec_In.ZLim = [0 255];
             app.RedAxes_HistSpec_In.XTick = [0 128 255];
             app.RedAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
-            app.RedAxes_HistSpec_In.Position = [97 344 182 121];
+            app.RedAxes_HistSpec_In.Position = [97 322 182 121];
 
             % Create GreenAxes_HistSpec_In
             app.GreenAxes_HistSpec_In = uiaxes(app.HistogramSpecificationTab);
@@ -611,7 +672,7 @@ classdef app < matlab.apps.AppBase
             app.GreenAxes_HistSpec_In.XLim = [0 255];
             app.GreenAxes_HistSpec_In.XTick = [0 128 255];
             app.GreenAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
-            app.GreenAxes_HistSpec_In.Position = [97 216 182 121];
+            app.GreenAxes_HistSpec_In.Position = [97 194 182 121];
 
             % Create ImageAxes_HistSpec_In
             app.ImageAxes_HistSpec_In = uiaxes(app.HistogramSpecificationTab);
@@ -636,7 +697,7 @@ classdef app < matlab.apps.AppBase
             app.BlueAxes_HistSpec_In.XLim = [0 255];
             app.BlueAxes_HistSpec_In.XTick = [0 128 255];
             app.BlueAxes_HistSpec_In.XTickLabel = {'0'; '128'; '255'};
-            app.BlueAxes_HistSpec_In.Position = [97 84 182 121];
+            app.BlueAxes_HistSpec_In.Position = [97 62 182 121];
 
             % Create RedAxes_HistSpec_Out
             app.RedAxes_HistSpec_Out = uiaxes(app.HistogramSpecificationTab);
@@ -647,7 +708,7 @@ classdef app < matlab.apps.AppBase
             app.RedAxes_HistSpec_Out.XLim = [0 255];
             app.RedAxes_HistSpec_Out.XTick = [0 128 255];
             app.RedAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
-            app.RedAxes_HistSpec_Out.Position = [696 344 182 121];
+            app.RedAxes_HistSpec_Out.Position = [696 322 182 121];
 
             % Create GreenAxes_HistSpec_Out
             app.GreenAxes_HistSpec_Out = uiaxes(app.HistogramSpecificationTab);
@@ -658,7 +719,7 @@ classdef app < matlab.apps.AppBase
             app.GreenAxes_HistSpec_Out.XLim = [0 255];
             app.GreenAxes_HistSpec_Out.XTick = [0 128 255];
             app.GreenAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
-            app.GreenAxes_HistSpec_Out.Position = [696 216 182 121];
+            app.GreenAxes_HistSpec_Out.Position = [696 194 182 121];
 
             % Create BlueAxes_HistSpec_Out
             app.BlueAxes_HistSpec_Out = uiaxes(app.HistogramSpecificationTab);
@@ -669,7 +730,7 @@ classdef app < matlab.apps.AppBase
             app.BlueAxes_HistSpec_Out.XLim = [0 255];
             app.BlueAxes_HistSpec_Out.XTick = [0 128 255];
             app.BlueAxes_HistSpec_Out.XTickLabel = {'0'; '128'; '255'};
-            app.BlueAxes_HistSpec_Out.Position = [696 84 182 121];
+            app.BlueAxes_HistSpec_Out.Position = [696 62 182 121];
 
             % Create ImageAxes_HistSpec_Target
             app.ImageAxes_HistSpec_Target = uiaxes(app.HistogramSpecificationTab);
@@ -690,7 +751,7 @@ classdef app < matlab.apps.AppBase
             app.RedAxes_HistSpec_Target.ZLim = [0 255];
             app.RedAxes_HistSpec_Target.XTick = [0 128 255];
             app.RedAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
-            app.RedAxes_HistSpec_Target.Position = [400 344 182 121];
+            app.RedAxes_HistSpec_Target.Position = [400 322 182 121];
 
             % Create GreenAxes_HistSpec_Target
             app.GreenAxes_HistSpec_Target = uiaxes(app.HistogramSpecificationTab);
@@ -701,7 +762,7 @@ classdef app < matlab.apps.AppBase
             app.GreenAxes_HistSpec_Target.XLim = [0 255];
             app.GreenAxes_HistSpec_Target.XTick = [0 128 255];
             app.GreenAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
-            app.GreenAxes_HistSpec_Target.Position = [400 216 182 121];
+            app.GreenAxes_HistSpec_Target.Position = [400 194 182 121];
 
             % Create BlueAxes_HistSpec_Target
             app.BlueAxes_HistSpec_Target = uiaxes(app.HistogramSpecificationTab);
@@ -712,7 +773,7 @@ classdef app < matlab.apps.AppBase
             app.BlueAxes_HistSpec_Target.XLim = [0 255];
             app.BlueAxes_HistSpec_Target.XTick = [0 128 255];
             app.BlueAxes_HistSpec_Target.XTickLabel = {'0'; '128'; '255'};
-            app.BlueAxes_HistSpec_Target.Position = [400 84 182 121];
+            app.BlueAxes_HistSpec_Target.Position = [400 62 182 121];
 
             % Create InputImageLabel_3
             app.InputImageLabel_3 = uilabel(app.HistogramSpecificationTab);
@@ -735,25 +796,17 @@ classdef app < matlab.apps.AppBase
             app.TargetImageLabel.Position = [367 748 103 22];
             app.TargetImageLabel.Text = 'Target Image';
 
-            % Create SelectImageDropDown_3Label
-            app.SelectImageDropDown_3Label = uilabel(app.HistogramSpecificationTab);
-            app.SelectImageDropDown_3Label.HorizontalAlignment = 'right';
-            app.SelectImageDropDown_3Label.Position = [70 34 75 22];
-            app.SelectImageDropDown_3Label.Text = 'Select Image';
+            % Create LoadImageButton_HistSpec_In
+            app.LoadImageButton_HistSpec_In = uibutton(app.HistogramSpecificationTab, 'push');
+            app.LoadImageButton_HistSpec_In.ButtonPushedFcn = createCallbackFcn(app, @LoadImageButton_HistSpec_InPushed, true);
+            app.LoadImageButton_HistSpec_In.Position = [138 474 100 22];
+            app.LoadImageButton_HistSpec_In.Text = 'Load Image';
 
-            % Create SelectImageDropDown_3
-            app.SelectImageDropDown_3 = uidropdown(app.HistogramSpecificationTab);
-            app.SelectImageDropDown_3.Position = [150 28 89 33];
-
-            % Create TargetImageDropDown_2Label
-            app.TargetImageDropDown_2Label = uilabel(app.HistogramSpecificationTab);
-            app.TargetImageDropDown_2Label.HorizontalAlignment = 'right';
-            app.TargetImageDropDown_2Label.Position = [387 34 75 22];
-            app.TargetImageDropDown_2Label.Text = 'Target Image';
-
-            % Create TargetImageDropDown_2
-            app.TargetImageDropDown_2 = uidropdown(app.HistogramSpecificationTab);
-            app.TargetImageDropDown_2.Position = [467 28 89 33];
+            % Create LoadImageButton_HistSpec_Target
+            app.LoadImageButton_HistSpec_Target = uibutton(app.HistogramSpecificationTab, 'push');
+            app.LoadImageButton_HistSpec_Target.ButtonPushedFcn = createCallbackFcn(app, @LoadImageButton_HistSpec_TargetPushed, true);
+            app.LoadImageButton_HistSpec_Target.Position = [451 474 100 22];
+            app.LoadImageButton_HistSpec_Target.Text = 'Load Image';
 
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';
