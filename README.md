@@ -15,7 +15,7 @@ We implement many operations to enhance the image, such as intensity histogram, 
 - 13518089 Annisa Rahim
 - 13518149 Stefanus Gusega Gunawan
 
-## Image Souces
+## Image Sources
 - http://www.imageprocessingplace.com/DIP-3E/dip3e_book_images_downloads.htm 
 - https://www.researchgate.net/figure/Example-of-low-contrast-images-and-corresponding-results-of-intensity-normalization-and_fig1_281118372 
 - https://hhsrop.wordpress.com/2020/01/06/learning-to-see-in-black-and-white/low-contrast-ex05/ 
